@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stubhub-auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stubhub-auth
+  template:
+    metadata:
+      labels:
+        app: stubhub-auth
+    spec:
+      containers:
+        - name: auth
+          image: maanasdevelopment/stubhub-auth
+          env:
+            - name: MONGO_URI
+              value: "mongodb://stubhub-auth-mongo-clusterip-srv:27017/auth"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stubhub-auth-clusterip-srv
+spec:
+  selector:
+    app: stubhub-auth
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

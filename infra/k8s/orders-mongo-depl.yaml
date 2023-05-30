@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stubhub-orders-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stubhub-orders-mongo
+  template:
+    metadata:
+      labels:
+        app: stubhub-orders-mongo
+    spec:
+      containers:
+        - name: stubhub-orders-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stubhub-orders-mongo-clusterip-srv
+spec:
+  selector:
+    app: stubhub-orders-mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017

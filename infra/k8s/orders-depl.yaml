@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stubhub-orders-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stubhub-orders
+  template:
+    metadata:
+      labels:
+        app: stubhub-orders
+    spec:
+      containers:
+        - name: orders
+          image: maanasdevelopment/stubhub-orders
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://stubhub-nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: stubhub
+            - name: MONGO_URI
+              value: "mongodb://stubhub-orders-mongo-clusterip-srv:27017/orders"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stubhub-orders-clusterip-srv
+spec:
+  selector:
+    app: stubhub-orders
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stubhub-auth-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stubhub-auth-mongo
+  template:
+    metadata:
+      labels:
+        app: stubhub-auth-mongo
+    spec:
+      containers:
+        - name: stubhub-auth-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stubhub-auth-mongo-clusterip-srv
+spec:
+  selector:
+    app: stubhub-auth-mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
