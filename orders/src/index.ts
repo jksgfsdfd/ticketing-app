@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { app } from "./app";
+import { ExpirationCompleteListener } from "./events/listeners/expirationCompleteListener";
 import { TicketCreatedListener } from "./events/listeners/ticketCreatedListener";
 import { TicketUpdatedListener } from "./events/listeners/ticketUpdatedListener";
 import { natsWrapper } from "./natsWrapper";
@@ -49,6 +50,7 @@ async function start() {
 
     new TicketCreatedListener(natsWrapper.client).listen();
     new TicketUpdatedListener(natsWrapper.client).listen();
+    new ExpirationCompleteListener(natsWrapper.client).listen();
   } catch (err) {
     console.error(err);
     throw new Error("Failed to connect to Nats");

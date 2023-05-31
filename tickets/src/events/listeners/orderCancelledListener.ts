@@ -7,6 +7,8 @@ import {
 } from "@maanas.backend/commons";
 import { Message } from "node-nats-streaming";
 import { Ticket } from "../../models/ticket";
+import { natsWrapper } from "../../natsWrapper";
+import { TicketUpdatedPublisher } from "../publishers/ticketUpdatedPublisher";
 import { queueGroupName } from "./queueGroupName";
 
 export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
@@ -20,6 +22,15 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
     }
 
     ticket.set({ orderId: undefined });
+    await ticket.save();
+    await new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket._id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      version: ticket.version,
+    });
+    msg.ack();
   }
   subject: Subjects.OrderCancelled = Subjects.OrderCancelled;
   queueGroupName: string = queueGroupName;
