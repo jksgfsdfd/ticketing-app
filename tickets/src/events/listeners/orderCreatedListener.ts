@@ -2,6 +2,8 @@
 import { Subjects, Listener, OrderCreatedEvent } from "@maanas.backend/commons";
 import { Message } from "node-nats-streaming";
 import { Ticket } from "../../models/ticket";
+import { natsWrapper } from "../../natsWrapper";
+import { TicketUpdatedPublisher } from "../publishers/ticketUpdatedPublisher";
 import { queueGroupName } from "./queueGroupName";
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
@@ -24,6 +26,13 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
     ticket.set({ orderId: id });
     await ticket.save();
+    await new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket._id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      version: ticket.version,
+    });
     msg.ack();
   }
 }

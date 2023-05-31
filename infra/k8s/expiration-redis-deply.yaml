@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stubhub-expiration-redis-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stubhub-expiration-redis
+  template:
+    metadata:
+      labels:
+        app: stubhub-expiration-redis
+    spec:
+      containers:
+        - name: stubhub-expiration-redis
+          image: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stubhub-expiration-redis-clusterip-srv
+spec:
+  selector:
+    app: stubhub-expiration-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379

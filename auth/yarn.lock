@@ -1296,10 +1296,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@maanas.backend/commons@^1.0.2":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@maanas.backend/commons/-/commons-1.0.12.tgz#b9f268686652ab58461906b95798666fca5927ae"
-  integrity sha512-Qub5LlU/GC2EEWyHydorfWhNy9Qf8bKlUdiUfjz4SxMLsLB7Ti77SXHciHnweAneL87kmq8Q5T8Et68ViFLNlg==
+"@maanas.backend/commons@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@maanas.backend/commons/-/commons-1.0.15.tgz#cb68933f1dffc9bf6cde14bb9facf1a4c01e52ce"
+  integrity sha512-9Npnh3PfbrohENZbTuA+uzsLycS1XOvm2h+Mf9MKkZynaWwqX4xl/N2bgHImXuAuPqYxfR/3/Eo6AxtpWM4Xog==
   dependencies:
     express-validator "^7.0.1"
     jsonwebtoken "^9.0.0"
