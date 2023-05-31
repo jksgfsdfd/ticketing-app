@@ -17,7 +17,6 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     msg: Message
   ): Promise<void> {
     const { id, expiresAt } = data;
-    console.log(data);
     const ticket = await Ticket.findById(data.ticket.id);
     if (!ticket) {
       throw new Error("Ticket not found");

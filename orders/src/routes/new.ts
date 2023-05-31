@@ -48,6 +48,8 @@ router.post(
       userId: userId,
     });
 
+    await newOrder.save();
+
     new OrderCreatedPublisher(natsWrapper.client).publish({
       id: newOrder._id,
       expiresAt: newOrder.expiresAt.toISOString(),
@@ -56,8 +58,6 @@ router.post(
         id: newOrder.ticket.id,
       },
     });
-
-    await newOrder.save();
 
     res.status(201).json(ticket.toJSON());
   }

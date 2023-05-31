@@ -7,12 +7,14 @@ interface TicketAttrs {
   title: string;
   price: number;
   userId: string;
+  version: number;
 }
 
 export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+  version: number;
   isReserved: () => Promise<boolean>;
 }
 
@@ -45,7 +47,6 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
-// won't it be better to just add a field of orderId containing the current active orderId?
 ticketSchema.methods.isReserved = async function () {
   const existingOrder = await Order.findOne({
     ticket: this as any,
@@ -69,6 +70,14 @@ ticketSchema.statics.build = (ticketInitData: TicketAttrs) => {
   delete temp["id"];
   return new Ticket(temp);
 };
+
+ticketSchema.set("versionKey", "version");
+ticketSchema.pre("save", function (done) {
+  this.$where = {
+    version: this.get("version") - 1,
+  };
+  done();
+});
 
 const Ticket = mongoose.model<TicketDoc, TicketModel>("Tickets", ticketSchema);
 
